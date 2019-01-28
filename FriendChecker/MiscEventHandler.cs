@@ -2,7 +2,6 @@ using Smod2;
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
-using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Threading;

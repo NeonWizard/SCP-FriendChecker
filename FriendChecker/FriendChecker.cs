@@ -18,7 +18,7 @@ namespace FriendChecker
 	)]
 	public class FriendChecker : Plugin
     {
-		internal static FriendChecker plugin;
+		public SteamAPI steamAPI;
 
 		public override void OnDisable()
 		{
@@ -27,6 +27,7 @@ namespace FriendChecker
 
 		public override void OnEnable()
 		{
+			this.steamAPI = new SteamAPI(this);
 			this.Info("FriendChecker has loaded successfully.");
 		}
 
@@ -40,6 +41,7 @@ namespace FriendChecker
 
 			// Register commands
 			this.AddCommand("friendcheckerdisable", new FCheckerDisableCommand(this));
+			this.AddCommand("fcheck", new FriendCheckCommand(this));
 		}
 	}
 }
