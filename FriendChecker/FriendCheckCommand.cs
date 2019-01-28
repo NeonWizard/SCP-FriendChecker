@@ -29,49 +29,56 @@ namespace FriendChecker
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
 			Server server = PluginManager.Manager.Server;
+			List<Player> targets = new List<Player>();
 
-			// -- Searching for friend circles for specific user
-			if (args.Length == 1)
+			// -- Fetch target(s)
+			if (args.Length == 1) // -- Searching for friend circles for specific user
 			{
 				// -- Find target player by args[0]
-				Player target = null;
 				if (short.TryParse(args[0], out short pID))
 				{
 					foreach (Player p in server.GetPlayers())
 					{
 						if (p.PlayerId == pID)
 						{
-							target = p;
+							targets.Add(p);
 						}
 					}
-					if (target == null) return new string[] { "Nobody with that player ID exists." };
+					if (targets.Count == 0) return new string[] { "Nobody with that player ID exists." };
 				}
 				else
 				{
 					return new string[] { "Can't parse player ID." };
 				}
+			}
+			else if (args.Length == 0) // -- Searching for all friend circles
+			{
+				targets = server.GetPlayers();
+			}
+			else // -- poopy di scoop. scoop diddy whoop. whoop di scoop di poop.
+			{
+				return new string[] { "Invalid number of arguments." };
+			}
 
+			// -- Calculate friends
+			List<string> output = new List<string> { "Listing friends..." };
+			foreach (Player target in targets)
+			{
 				// -- Lookup target's friends from SteamAPI
 				string[] friendIDs = this.plugin.steamAPI.GetFriends(target.SteamId);
 
 				// -- Cross-reference target's friends with online players
-				string[] onlineFriendIds = server
+				string[] onlineFriendIDs = server
 					.GetPlayers()
 					.Where(x => friendIDs.Contains(x.SteamId))
 					.Select(x => x.Name)
 					.ToArray();
 
-				return new string[] { "Listing friends...", "["+target.Name+"] " + string.Join(", ", onlineFriendIds) };
-			}
-			// -- Searching for all friend circles
-			else if (args.Length == 0)
-			{
-				//foreach (Player p in server.GetPlayers())
-				//{
-				//}
+				// -- Add to output if player only if player has any friends online
+				if (onlineFriendIDs.Count() > 0) output.Add("[" + target.Name + "] " + string.Join(", ", onlineFriendIDs));
 			}
 
-			return new string[] { "Invalid number of arguments." };
+			return output.ToArray();
 		}
 	}
 }
