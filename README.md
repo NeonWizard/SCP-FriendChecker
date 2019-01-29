@@ -9,8 +9,10 @@ A simple plugin for SCP:SL Smod2 servers, which helps to find friend circles on 
 
 ## Commands
 Command | Value Type | Description
---- | :---: | ---
+:---: | :---: | ---
 FRIENDCHECKERDISABLE | | **Disables the FriendChecker plugin.** Server will need to restart to enable it again.
+FCHECK | Int | List all friends of the specified player that are currently on the server.
+FCHECK | | List all friend circles on the server.
 
 ## Configuration
 Config Option | Value Type | Default Value | Description
